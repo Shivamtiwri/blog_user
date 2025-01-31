@@ -1,7 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import image from "../../Assests/02.7b36c041.jpg";
+import AxiosConfigadmin from "../../Config/AxiosConfig copy";
+import { End_Urls } from "../../Config/End_Urls";
 
 const Home = () => {
+  const [data, setData] = useState();
+  const adminlogin = () => {
+    AxiosConfigadmin.get(End_Urls.userget_blog)
+      .then((res) => {
+        setData(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    adminlogin();
+  }, []);
   return (
     <div className="lg:p-20 p-5">
       <p className="text-gray-500 font-bold text-4xl">Blog List</p>
@@ -124,35 +140,45 @@ const Home = () => {
           <div className="flex gap-3 ">
             <img src={image} alt="" className="h-20 w-20 rounded-lg" />
             <div className="flex flex-col">
-              <p className="text-gray-500 font-semibold">Why Should Forget Facebook?</p>
+              <p className="text-gray-500 font-semibold">
+                Why Should Forget Facebook?
+              </p>
               <p className="text-gray-400">Jan 14 2020</p>
             </div>
           </div>
           <div className="flex gap-3 ">
             <img src={image} alt="" className="h-20 w-20 rounded-lg" />
             <div className="flex flex-col">
-              <p className="text-gray-500 font-semibold">Why Should Forget Facebook?</p>
+              <p className="text-gray-500 font-semibold">
+                Why Should Forget Facebook?
+              </p>
               <p className="text-gray-400">Jan 14 2020</p>
             </div>
           </div>
           <div className="flex gap-3 ">
             <img src={image} alt="" className="h-20 w-20 rounded-lg" />
             <div className="flex flex-col">
-              <p className="text-gray-500 font-semibold">Why Should Forget Facebook?</p>
+              <p className="text-gray-500 font-semibold">
+                Why Should Forget Facebook?
+              </p>
               <p className="text-gray-400">Jan 14 2020</p>
             </div>
           </div>
           <div className="flex gap-3 ">
             <img src={image} alt="" className="h-20 w-20 rounded-lg" />
             <div className="flex flex-col">
-              <p className="text-gray-500 font-semibold">Why Should Forget Facebook?</p>
+              <p className="text-gray-500 font-semibold">
+                Why Should Forget Facebook?
+              </p>
               <p className="text-gray-400">Jan 14 2020</p>
             </div>
           </div>
           <div className="flex gap-3 ">
             <img src={image} alt="" className="h-20 w-20 rounded-lg" />
             <div className="flex flex-col">
-              <p className="text-gray-500 font-semibold">Why Should Forget Facebook?</p>
+              <p className="text-gray-500 font-semibold">
+                Why Should Forget Facebook?
+              </p>
               <p className="text-gray-400">Jan 14 2020</p>
             </div>
           </div>
