@@ -5,4 +5,5 @@ export const End_Urls = {
   getsingaleblog: "/user/get-singale-blog",
   adminaddblog: "/admin/add-blog",
   comment: "/user/add_comment",
+  getcomment: "/user/get_comment",
 };
