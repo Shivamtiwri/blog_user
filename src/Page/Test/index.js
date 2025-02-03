@@ -25,6 +25,31 @@ export default function Test() {
     return formattedDate;
   };
 
+  function getDeviceDetails() {
+    return {
+        userAgent: navigator.userAgent,
+        platform: navigator.platform,
+        language: navigator.language,
+        deviceMemory: navigator.deviceMemory, // For device memory info (if supported)
+        screenResolution: `${window.screen.width}x${window.screen.height}`,
+        isTouchDevice: 'ontouchstart' in window
+    };
+}
+const deviceDetails = getDeviceDetails();
+console.log(deviceDetails);
+function setDeviceId() {
+  const deviceId = localStorage.getItem('device_id') || generateDeviceId();
+  localStorage.setItem('device_id', deviceId);
+  return deviceId;
+}
+
+function generateDeviceId() {
+  return 'device_' + Math.random().toString(36).substr(2, 9); // Generates a random ID
+}
+
+console.log(setDeviceId());
+
+
   const time = (datetime) => {
     const date = new Date(datetime);
     const formattedTime = date.toLocaleTimeString("en-GB", {
