@@ -7,7 +7,7 @@ import { StakingApp } from "../../Hook";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import SearchIcon from "@mui/icons-material/Search";
 
-export default function Header() {
+export default function Header1() {
   const navigate = useNavigate();
   const { selectedDate, setSelecteddate } = useContext(StakingApp);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -51,7 +51,7 @@ export default function Header() {
               aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
               onClick={handleClick}
-              className=" !text-red-700"
+              className=" !text-red-500"
             />
 
             <Menu
@@ -78,27 +78,7 @@ export default function Header() {
           </div>
         </div>
       </div>
-      <div className="flex w-full px-5 items-center mt-3 gap-2 lg:hidden">
-        <div className="flex items-center bg-gray-50 w-[90%] shadow-md py-1 px-2 rounded-full">
-          <SearchIcon className="!text-red-700" />
-          <input
-            type="text"
-            className="outline-none w-full py-2 px-3 bg-transparent rounded-md"
-            placeholder="Search"
-          />
-        </div>
-        <div className="p-2 bg-gray-50 shadow-md rounded-full">
-        <FilterListIcon
-          id="basic-button"
-          aria-controls={open ? "basic-menu" : undefined}
-          aria-haspopup="true"
-          aria-expanded={open ? "true" : undefined}
-          onClick={handleClick}
-          className=" !text-red-700"
-        />
-        </div>
-        
-      </div>
+     
     </nav>
   );
 }

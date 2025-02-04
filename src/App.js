@@ -11,7 +11,7 @@ import Terms from "./Page/Terms";
 
 function App() {
   return (
-    <div className="bg-gray-100">
+    <div className="bg-gray-100 py-1">
       <BrowserRouter>
         <Staking>
           <Routes>

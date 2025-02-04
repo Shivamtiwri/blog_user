@@ -26,7 +26,7 @@ export default function AnchorTemporaryDrawer() {
   return (
     <div>
       {/* Button to open the right drawer */}
-      <MenuIcon onClick={toggleDrawer(true)} aria-label="open menu" />
+      <MenuIcon onClick={toggleDrawer(true)} aria-label="open menu" className="!text-red-700" />
 
       {/* Drawer component */}
       <Drawer
@@ -42,7 +42,7 @@ export default function AnchorTemporaryDrawer() {
       >
         <div className="flex flex-col p-5">
           {/* Search Bar */}
-          <div className="flex items-center bg-white border py-1 px-2 rounded-md">
+          {/* <div className="flex items-center bg-white border py-1 px-2 rounded-md">
             <SearchIcon className="text-gray-500" />
             <input
               type="text"
@@ -50,7 +50,7 @@ export default function AnchorTemporaryDrawer() {
               placeholder="Search"
               aria-label="search"
             />
-          </div>
+          </div> */}
 
           {/* Logo and Title */}
           <div className="flex flex-col items-center mt-5 gap-4">
@@ -66,15 +66,15 @@ export default function AnchorTemporaryDrawer() {
           </div>
 
           {/* Links */}
-          <div className="flex flex-col items-center mt-5 gap-3">
-            <div className="flex w-[50%] justify-between">
+          <div className="flex items-center justify-center mt-5 gap-3">
+         
               <p onClick={()=>navigate("/about-us")} className="text-sm text-gray-600 cursor-pointer hover:text-red-600 hover:underline transition-colors">
-                About us
+                AboutUs
               </p>
               <p onClick={()=>navigate("/privacy")} className="text-sm text-gray-600 cursor-pointer hover:text-red-600 hover:underline transition-colors">
                 Privacy
               </p>
-            </div>
+            
             <p onClick={()=>navigate("/terms")} className="text-sm text-gray-600 cursor-pointer hover:text-red-600 hover:underline transition-colors">
               Terms
             </p>

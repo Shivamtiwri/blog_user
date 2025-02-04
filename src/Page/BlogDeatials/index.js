@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Header from "../Header";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import MarkChatUnreadOutlinedIcon from "@mui/icons-material/MarkChatUnreadOutlined";
 import { useParams } from "react-router-dom";
@@ -9,6 +8,7 @@ import axios from "axios";
 import SendIcon from "@mui/icons-material/Send";
 import Loader from "../../Config/Loder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import Header1 from "../Header copy";
 
 export default function BlogDeatials() {
   const [like, setLike] = useState(false);
@@ -69,7 +69,7 @@ export default function BlogDeatials() {
   const handleLike = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/user/like_blog",
+        "https://api.saarkansas.org/user/like_blog",
         {
           blog_id: id,
           like_status: cset ? 0 : 1, // Toggle like/unlike
@@ -87,7 +87,7 @@ export default function BlogDeatials() {
   const unhandleLike = async (likr_id) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/user/un_likeBlog",
+        "https://api.saarkansas.org/user/un_likeBlog",
         {
           blog_id: id,
           like_id: likr_id, // Toggle like/unlike
@@ -159,10 +159,10 @@ export default function BlogDeatials() {
   } = data;
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <Header />
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow-md mb-4 overflow-hidden">
+    <div className="min-h-screen bg-gray-100 ">
+      <Header1 />
+      <div className="max-w-7xl mx-auto lg:px-0 px-1  lg:bg-white rounded-t-xl mt-2 lg:mt-8">
+        <div className=" overflow-hidden ">
           {image_url.split(".")[3] === "mp4" ? (
             <video
               className="w-full lg:h-96 h-64 object-cover rounded-t-xl"
@@ -186,20 +186,23 @@ export default function BlogDeatials() {
             alt="Post"
             className="w-full h-[50%] object-cover"
           /> */}
-          <div className="p-6">
+          <div className="p-6 bg-white">
             <h2 className="text-2xl text-red-700  font-semibold mb-2">
               {title}
             </h2>
-            <p className="text-sm text-gray-500 mb-4">
+            <p className="text-sm text-red-700 mb-4">
               By {admin_name} |{" "}
               {`${date(created_date)} time: ${time(created_date)}`}
             </p>
             <p
               dangerouslySetInnerHTML={{ __html: description }}
-              className="text-gray-700 mb-4"
+              className="text-gray-700 mb-1"
             ></p>
 
-            <div className="flex justify-between items-center text-gray-500">
+           
+          </div>
+        </div>
+        <div className="flex justify-between items-center text-gray-500 border-t-2 bg-white">
               <div className="flex items-center gap-2">
                 {like_status === 0 ? (
                   <p
@@ -228,14 +231,13 @@ export default function BlogDeatials() {
                 {total_comments}
               </div>
             </div>
-          </div>
-        </div>
 
         {cset && (
-          <div>
-            <h4 className="text-lg text-red-500 font-semibold mb-2">Comment</h4>
-            <div className="px-6 flex flex-col py-4 bg-white shadow-md rounded-lg">
-              <div className="flex flex-col h-52 overflow-auto px-10">
+          <div className="text-sm mt-2 ">
+            
+            <div className="lg:px-6 px-2 flex flex-col py-4 bg-white shadow-md rounded-lg">
+            <h4 className="text-lg text-red-700 font-semibold mb-2 lg:pl-5">Comment</h4>
+              <div className="flex flex-col max-h-52 overflow-auto lg:px-10 px-5">
                 {commentdata?.map((item) => {
                   return (
                     <span
@@ -261,15 +263,16 @@ export default function BlogDeatials() {
 
               <form onSubmit={handleCommentSubmit}>
                 <div className="flex flex-col gap-1 rounded-lg p-4">
-                  {!user_id && (
+                
                     <input
                       type="text"
                       placeholder="Enter User Name"
-                      value={user}
+                      value={user_id?`@`+user_id:`@`+user}
                       onChange={(e) => setuser(e.target.value)}
-                      className="outline-none border bg-gray-100 w-44 pl-3 ml-2 py-1 rounded-md"
+                      className="outline-none border bg-gray-100 w-44 pl-1 ml-2 py-1 rounded-md"
+                      disabled={user_id}
                     />
-                  )}
+             
 
                   <div className="flex items-center gap-2">
                     <textarea
