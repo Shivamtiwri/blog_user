@@ -8,6 +8,7 @@ import { End_Urls } from "../../Config/End_Urls";
 import axios from "axios";
 import SendIcon from "@mui/icons-material/Send";
 import Loader from "../../Config/Loder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 export default function BlogDeatials() {
   const [like, setLike] = useState(false);
@@ -41,11 +42,23 @@ export default function BlogDeatials() {
     return formattedTime;
   };
 
+  function setDeviceId() {
+    const deviceId = localStorage.getItem("device_id") || generateDeviceId();
+    localStorage.setItem("device_id", deviceId);
+    return deviceId;
+  }
+
+  function generateDeviceId() {
+    return "device_" + Math.random().toString(36).substr(2, 9); // Generates a random ID
+  }
+
+  const device_id = setDeviceId();
+
   // Fetch blog data
   const adminlogin = async () => {
     try {
       const res = await AxiosConfigadmin.get(
-        End_Urls.getsingaleblog + `?id=${id}`
+        End_Urls.getsingaleblog + `?id=${id}&devi=${device_id}`
       );
       setData(res.data.data);
     } catch (err) {
@@ -56,20 +69,35 @@ export default function BlogDeatials() {
   const handleLike = async () => {
     try {
       const response = await axios.post(
-        "https://api.saarkansas.org/user/like_blog",
+        "http://localhost:8000/user/like_blog",
         {
           blog_id: id,
           like_status: cset ? 0 : 1, // Toggle like/unlike
+          device_id: device_id,
         }
       );
 
-      console.log(response.data);
-      alert(cset ? "Blog unliked!" : "Blog liked!");
       adminlogin();
       // setLikeStatus(!cset);
     } catch (error) {
       console.error("Error:", error.response?.data || error.message);
-      alert("Failed to like blog!");
+    }
+  };
+
+  const unhandleLike = async (likr_id) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/user/un_likeBlog",
+        {
+          blog_id: id,
+          like_id: likr_id, // Toggle like/unlike
+        }
+      );
+
+      adminlogin();
+      // setLikeStatus(!cset);
+    } catch (error) {
+      console.error("Error:", error.response?.data || error.message);
     }
   };
 
@@ -116,16 +144,18 @@ export default function BlogDeatials() {
   const toggleLike = () => setLike((prev) => !prev);
   const toggleCommentSection = () => setCset((prev) => !prev);
 
-  if (!data) return <Loader/>;
+  if (!data) return <Loader />;
 
   const {
     title,
+    like_id,
     image_url,
     description,
     admin_name,
     created_date,
     total_likes,
     total_comments,
+    like_status,
   } = data;
 
   return (
@@ -171,16 +201,26 @@ export default function BlogDeatials() {
 
             <div className="flex justify-between items-center text-gray-500">
               <div className="flex items-center gap-2">
-                <FavoriteBorderIcon
-                  onClick={() => {
-                    toggleLike();
-                    handleLike();
-                  }}
-                  className={`${
-                    like ? "text-red-500 cursor-pointer" : "cursor-pointer"
-                  }`}
-                />
-                {total_likes}
+                {like_status === 0 ? (
+                  <p
+                    onClick={() => {
+                      toggleLike();
+                      handleLike();
+                    }}
+                    className="text-black   hover:bg-red-100 hover:rounded-3xl px-5 py-1"
+                  >
+                    <FavoriteBorderIcon />
+                    {total_likes}
+                  </p>
+                ) : (
+                  <p
+                    onClick={() => unhandleLike(like_id)}
+                    className="text-red-700  hover:text-red-700 hover:bg-red-100 hover:rounded-3xl px-5 py-1"
+                  >
+                    <FavoriteIcon /> {total_likes}
+                  </p>
+                )}
+
                 <MarkChatUnreadOutlinedIcon
                   onClick={toggleCommentSection}
                   className="cursor-pointer"
