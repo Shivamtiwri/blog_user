@@ -26,7 +26,7 @@ export default function Header() {
   };
 
   return (
-    <nav className="sticky lg:top-5 z-10  lg:mx-5 lg:rounded-md">
+    <nav className="sticky lg:top-5 top-0 z-10  lg:mx-5 lg:rounded-md">
       <div className="max-w-7xl bg-white shadow-md  lg:rounded-md mx-auto px-4 lg:py-2 py-3 flex justify-between items-center">
         <div
           onClick={() => navigate("/")}
@@ -88,16 +88,15 @@ export default function Header() {
           />
         </div>
         <div className="p-2 bg-gray-50 shadow-md rounded-full">
-        <FilterListIcon
-          id="basic-button"
-          aria-controls={open ? "basic-menu" : undefined}
-          aria-haspopup="true"
-          aria-expanded={open ? "true" : undefined}
-          onClick={handleClick}
-          className=" !text-red-700"
-        />
+          <FilterListIcon
+            id="basic-button"
+            aria-controls={open ? "basic-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+            onClick={handleClick}
+            className=" !text-red-700"
+          />
         </div>
-        
       </div>
     </nav>
   );

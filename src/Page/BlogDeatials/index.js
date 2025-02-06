@@ -69,7 +69,7 @@ export default function BlogDeatials() {
   const handleLike = async () => {
     try {
       const response = await axios.post(
-        "https://api.saarkansas.org/user/like_blog",
+        "http://localhost:8000/user/like_blog",
         {
           blog_id: id,
           like_status: cset ? 0 : 1, // Toggle like/unlike
@@ -87,7 +87,7 @@ export default function BlogDeatials() {
   const unhandleLike = async (likr_id) => {
     try {
       const response = await axios.post(
-        "https://api.saarkansas.org/user/un_likeBlog",
+        "http://localhost:8000/user/un_likeBlog",
         {
           blog_id: id,
           like_id: likr_id, // Toggle like/unlike
@@ -125,7 +125,7 @@ export default function BlogDeatials() {
     }
 
     try {
-      await axios.post("https://api.saarkansas.org/user/add_comment", {
+      await axios.post("http://localhost:8000/user/add_comment", {
         blog_id: data?.id,
         comment_content: comment,
         user_id: user_id ? user_id : user,
@@ -155,6 +155,7 @@ export default function BlogDeatials() {
     created_date,
     total_likes,
     total_comments,
+    tags,
     like_status,
   } = data;
 
@@ -194,49 +195,71 @@ export default function BlogDeatials() {
               By {admin_name} |{" "}
               {`${date(created_date)} time: ${time(created_date)}`}
             </p>
+            <div className="flex gap-2">
+              {tags.map((tag, ind) => {
+                return (
+                  <p
+                    className={`${
+                      ind + 1 === 1
+                        ? "bg-green-200"
+                        : ind + 1 === 2
+                        ? "bg-red-200"
+                        : ind + 1 === 3
+                        ? "bg-yellow-200"
+                        : ind + 1 === 4
+                        ? "bg-blue-200"
+                        : ind + 1 === 5
+                        ? "bg-purple-200"
+                        : "bg-amber-200"
+                    } rounded-full px-2 shadow-md my-3`}
+                  >
+                    {tag.tag_name}
+                  </p>
+                );
+              })}
+            </div>
             <p
               dangerouslySetInnerHTML={{ __html: description }}
               className="text-gray-700 mb-1"
             ></p>
-
-           
           </div>
         </div>
         <div className="flex justify-between items-center text-gray-500 border-t-2 bg-white">
-              <div className="flex items-center gap-2">
-                {like_status === 0 ? (
-                  <p
-                    onClick={() => {
-                      toggleLike();
-                      handleLike();
-                    }}
-                    className="text-black   hover:bg-red-100 hover:rounded-3xl px-5 py-1"
-                  >
-                    <FavoriteBorderIcon />
-                    {total_likes}
-                  </p>
-                ) : (
-                  <p
-                    onClick={() => unhandleLike(like_id)}
-                    className="text-red-700  hover:text-red-700 hover:bg-red-100 hover:rounded-3xl px-5 py-1"
-                  >
-                    <FavoriteIcon /> {total_likes}
-                  </p>
-                )}
+          <div className="flex items-center gap-2">
+            {like_status === 0 ? (
+              <p
+                onClick={() => {
+                  toggleLike();
+                  handleLike();
+                }}
+                className="text-black   hover:bg-red-100 hover:rounded-3xl px-5 py-1"
+              >
+                <FavoriteBorderIcon />
+                {total_likes}
+              </p>
+            ) : (
+              <p
+                onClick={() => unhandleLike(like_id)}
+                className="text-red-700  hover:text-red-700 hover:bg-red-100 hover:rounded-3xl px-5 py-1"
+              >
+                <FavoriteIcon /> {total_likes}
+              </p>
+            )}
 
-                <MarkChatUnreadOutlinedIcon
-                  onClick={toggleCommentSection}
-                  className="cursor-pointer"
-                />
-                {total_comments}
-              </div>
-            </div>
+            <MarkChatUnreadOutlinedIcon
+              onClick={toggleCommentSection}
+              className="cursor-pointer"
+            />
+            {total_comments}
+          </div>
+        </div>
 
         {cset && (
           <div className="text-sm mt-2 ">
-            
             <div className="lg:px-6 px-2 flex flex-col py-4 bg-white shadow-md rounded-lg">
-            <h4 className="text-lg text-red-700 font-semibold mb-2 lg:pl-5">Comment</h4>
+              <h4 className="text-lg text-red-700 font-semibold mb-2 lg:pl-5">
+                Comment
+              </h4>
               <div className="flex flex-col max-h-52 overflow-auto lg:px-10 px-5">
                 {commentdata?.map((item) => {
                   return (
@@ -263,16 +286,14 @@ export default function BlogDeatials() {
 
               <form onSubmit={handleCommentSubmit}>
                 <div className="flex flex-col gap-1 rounded-lg p-4">
-                
-                    <input
-                      type="text"
-                      placeholder="Enter User Name"
-                      value={user_id?`@`+user_id:`@`+user}
-                      onChange={(e) => setuser(e.target.value)}
-                      className="outline-none border bg-gray-100 w-44 pl-1 ml-2 py-1 rounded-md"
-                      disabled={user_id}
-                    />
-             
+                  <input
+                    type="text"
+                    placeholder="Enter User Name"
+                    value={user_id ? `@` + user_id : `@` + user}
+                    onChange={(e) => setuser(e.target.value)}
+                    className="outline-none border bg-gray-100 w-44 pl-1 ml-2 py-1 rounded-md"
+                    disabled={user_id}
+                  />
 
                   <div className="flex items-center gap-2">
                     <textarea

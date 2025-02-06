@@ -26,7 +26,7 @@ export default function Header1() {
   };
 
   return (
-    <nav className="sticky lg:top-5 z-10  lg:mx-5 lg:rounded-md">
+    <nav className="sticky lg:top-5 top-0 z-10  lg:mx-5 lg:rounded-md">
       <div className="max-w-7xl bg-white shadow-md  lg:rounded-md mx-auto px-4 lg:py-2 py-3 flex justify-between items-center">
         <div
           onClick={() => navigate("/")}
@@ -78,7 +78,6 @@ export default function Header1() {
           </div>
         </div>
       </div>
-     
     </nav>
   );
 }

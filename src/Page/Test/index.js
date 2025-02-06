@@ -18,7 +18,7 @@ export default function Test() {
   const { selectedDate } = useContext(StakingApp);
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [page,setPage]=useState( true)
+  const [page, setPage] = useState(1);
 
   function setDeviceId() {
     const deviceId = localStorage.getItem("device_id") || generateDeviceId();
@@ -33,7 +33,9 @@ export default function Test() {
   const device_id = setDeviceId();
   const getBlog = () => {
     setIsLoading(true);
-    AxiosConfigadmin.get(End_Urls.userget_blog + `?devi=${device_id}`)
+    AxiosConfigadmin.get(
+      End_Urls.userget_blog + `?devi=${device_id}&status=${page}`
+    )
       .then((res) => {
         setData(res.data.data);
         setIsLoading(false);
@@ -46,7 +48,7 @@ export default function Test() {
 
   useEffect(() => {
     getBlog();
-  }, [selectedDate]);
+  }, [selectedDate, page]);
 
   const formatDate = (datetime) => {
     const date = new Date(datetime);
@@ -124,10 +126,26 @@ export default function Test() {
         <div className="flex flex-col col-span-1 md:col-span-6">
           <div className="flex w-full items-center border  ">
             <div className="w-1/2 flex items-center justify-center border-r py-3 ">
-              <p onClick={()=>setPage(true)} className={`font-bold cursor-pointer ${page&&"underline"}`}>Feeds </p>{page&&"✨"}
+              <p
+                onClick={() => setPage(1)}
+                className={`font-bold cursor-pointer ${
+                  page === 1 && "underline"
+                }`}
+              >
+                Feeds
+              </p>
+              {/* {page && "✨"} */}
             </div>
             <div className="w-1/2 flex items-center justify-center border-l py-3">
-            <p onClick={()=>setPage(false)} className={`font-bold cursor-pointer ${!page&&"underline"}`}>Events</p>{!page&&"✨"}
+              <p
+                onClick={() => setPage(2)}
+                className={`font-bold cursor-pointer ${
+                  page === 2 && "underline"
+                }`}
+              >
+                Events
+              </p>
+              {/* {!page && "✨"} */}
             </div>
           </div>
           <div className="col-span-1 md:col-span-6 border">
@@ -173,6 +191,29 @@ export default function Test() {
                             · {formatDate(item.created_date)}
                             {formatTime(item.created_date)}
                           </span>
+                        </div>
+                        <div className="flex gap-2">
+                          {item.tags.map((tag, ind) => {
+                            return (
+                              <p
+                                className={`${
+                                  ind + 1 === 1
+                                    ? "bg-green-200"
+                                    : ind + 1 === 2
+                                    ? "bg-red-200"
+                                    : ind + 1 === 3
+                                    ? "bg-yellow-200"
+                                    : ind + 1 === 4
+                                    ? "bg-blue-200"
+                                    : ind + 1 === 5
+                                    ? "bg-purple-200"
+                                    : "bg-amber-200"
+                                } rounded-full px-2 shadow-md my-3`}
+                              >
+                                {tag.tag_name}
+                              </p>
+                            );
+                          })}
                         </div>
                         <p
                           dangerouslySetInnerHTML={{ __html: item.description }}
