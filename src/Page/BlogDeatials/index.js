@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import MarkChatUnreadOutlinedIcon from "@mui/icons-material/MarkChatUnreadOutlined";
 import { useParams } from "react-router-dom";
@@ -9,6 +9,7 @@ import SendIcon from "@mui/icons-material/Send";
 import Loader from "../../Config/Loder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Header1 from "../Header copy";
+import ReactPlayer from "react-player";
 
 export default function BlogDeatials() {
   const [like, setLike] = useState(false);
@@ -19,6 +20,7 @@ export default function BlogDeatials() {
   const [comment, setComment] = useState("");
   const [commentdata, setCommentData] = useState();
   const user_id = localStorage.getItem("user_id");
+  const playerRef = useRef(null);
   const date = (datetime) => {
     const date = new Date(datetime);
 
@@ -69,7 +71,7 @@ export default function BlogDeatials() {
   const handleLike = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/user/like_blog",
+        "https://api.saarkansas.org/user/like_blog",
         {
           blog_id: id,
           like_status: cset ? 0 : 1, // Toggle like/unlike
@@ -87,7 +89,7 @@ export default function BlogDeatials() {
   const unhandleLike = async (likr_id) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/user/un_likeBlog",
+        "https://api.saarkansas.org/user/un_likeBlog",
         {
           blog_id: id,
           like_id: likr_id, // Toggle like/unlike
@@ -125,7 +127,7 @@ export default function BlogDeatials() {
     }
 
     try {
-      await axios.post("http://localhost:8000/user/add_comment", {
+      await axios.post("https://api.saarkansas.org/user/add_comment", {
         blog_id: data?.id,
         comment_content: comment,
         user_id: user_id ? user_id : user,
@@ -157,6 +159,7 @@ export default function BlogDeatials() {
     total_comments,
     tags,
     like_status,
+    file_type,
   } = data;
 
   return (
@@ -164,29 +167,31 @@ export default function BlogDeatials() {
       <Header1 />
       <div className="max-w-7xl mx-auto lg:px-0 px-1  lg:bg-white rounded-t-xl mt-2 lg:mt-8">
         <div className=" overflow-hidden ">
-          {image_url.split(".")[3] === "mp4" ? (
-            <video
-              className="w-full lg:h-96 h-64 object-cover rounded-t-xl"
-              autoPlay
-              muted
-              loop
-              playsInline
-            >
-              <source src={image_url} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          ) : (
+          {file_type === "1" && (
             <img
               src={image_url}
               alt="Image"
               className="w-full lg:h-96 h-64 object-cover rounded-t-xl"
+              
             />
           )}
-          {/* <img
-            src={image_url}
-            alt="Post"
-            className="w-full h-[50%] object-cover"
-          /> */}
+          {file_type === "2" && (
+            <ReactPlayer
+              ref={playerRef}
+              url={image_url}
+              controls
+              width="100%"
+            />
+          )}
+          {file_type === "3" && (
+            <ReactPlayer
+              ref={playerRef}
+              url={image_url}
+              controls
+              width="100%"
+            />
+          )}
+
           <div className="p-6 bg-white">
             <h2 className="text-2xl text-red-700  font-semibold mb-2">
               {title}
@@ -288,23 +293,24 @@ export default function BlogDeatials() {
                 <div className="flex flex-col gap-1 rounded-lg p-4">
                   <input
                     type="text"
-                    placeholder="Enter User Name"
-                    value={user_id ? `@` + user_id : `@` + user}
+                    placeholder="Enter @Username"
+                    value={user_id ? user_id : user}
                     onChange={(e) => setuser(e.target.value)}
-                    className="outline-none border bg-gray-100 w-44 pl-1 ml-2 py-1 rounded-md"
+                    className="outline-none border bg-gray-100 w-44 pl-1 py-1 rounded-md"
                     disabled={user_id}
+                    minLength={4}
                   />
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center rounded-md border-2 my-1 gap-2">
                     <textarea
                       placeholder="Enter Comment"
-                      className="py-2 rounded-md border w-full pl-5"
+                      className="py-2 outline-none  w-full pl-5"
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}
                     />
                     <button
                       type="submit"
-                      className="bg-gray-100 border py-1 text-center px-5 rounded-md text-white"
+                      className=" mt-5 text-center px-5 rounded-md text-white"
                     >
                       <SendIcon className="!text-red-700" />
                     </button>

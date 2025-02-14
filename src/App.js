@@ -8,6 +8,7 @@ import { Staking } from "./Hook";
 import AboutUs from "./Page/aboutUs";
 import Privacy from "./Page/Privacy";
 import Terms from "./Page/Terms";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route path="/details/:id" element={<BlogDeatials />} />
             <Route path="/" element={<Test />} />
           </Routes>
+          <ToastContainer />
         </Staking>
       </BrowserRouter>
     </div>

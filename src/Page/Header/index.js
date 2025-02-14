@@ -5,11 +5,10 @@ import AnchorTemporaryDrawer from "../AnchorTemporaryDrawer";
 import { Button, Menu, MenuItem } from "@mui/material";
 import { StakingApp } from "../../Hook";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import SearchIcon from "@mui/icons-material/Search";
 
 export default function Header() {
   const navigate = useNavigate();
-  const { selectedDate, setSelecteddate } = useContext(StakingApp);
+  const { todate,setTodate,fromdate,setFromdate } = useContext(StakingApp);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -17,9 +16,14 @@ export default function Header() {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleYearChange = (event) => {
-    setSelecteddate(event.target.value);
+  const handleYearTo = (event) => {
+    setTodate(event.target.value);
   };
+
+  const handleYearFrom = (event) => {
+    setFromdate(event.target.value);
+  };
+
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -63,39 +67,33 @@ export default function Header() {
                 "aria-labelledby": "basic-button",
               }}
             >
-              <MenuItem>
+              <div className="px-2 w-48 broder-b my-1">
+                <p>To date</p>
                 <input
                   type="date"
-                  value={selectedDate}
-                  onChange={handleYearChange}
+                  value={todate}
+                  onChange={handleYearTo}
                   placeholder="Enter Year"
                   min="1900"
                   max="2100"
                   className="border p-2 rounded-md w-full"
                 />
-              </MenuItem>
+              </div>
+
+              <div className="px-2 w-48 border-t my-1">
+                <p>From date</p>
+                <input
+                  type="date"
+                  value={fromdate}
+                  onChange={handleYearFrom}
+                  placeholder="Enter Year"
+                  min="1900"
+                  max="2100"
+                  className="border p-2 rounded-md w-full"
+                />
+              </div>
             </Menu>
           </div>
-        </div>
-      </div>
-      <div className="flex w-full px-5 items-center mt-3 gap-2 lg:hidden">
-        <div className="flex items-center bg-gray-50 w-[90%] shadow-md py-1 px-2 rounded-full">
-          <SearchIcon className="!text-red-700" />
-          <input
-            type="text"
-            className="outline-none w-full py-2 px-3 bg-transparent rounded-md"
-            placeholder="Search"
-          />
-        </div>
-        <div className="p-2 bg-gray-50 shadow-md rounded-full">
-          <FilterListIcon
-            id="basic-button"
-            aria-controls={open ? "basic-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-            onClick={handleClick}
-            className=" !text-red-700"
-          />
         </div>
       </div>
     </nav>

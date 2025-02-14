@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import logo from "../../Assests/image.png";
 import SearchIcon from "@mui/icons-material/Search";
 import Header from "../Header";
@@ -12,13 +12,26 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ReadMoreIcon from "@mui/icons-material/ReadMore";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import axios from "axios";
+import Search from "../Search";
+import ReactPlayer from "react-player";
 
 export default function Test() {
   const navigate = useNavigate();
-  const { selectedDate } = useContext(StakingApp);
+  const {
+    todate,
+    fromdate,
+    selectedDate,
+    page,
+    setPage,
+    email,
+    setEmail,
+    subscribe,
+    serch,
+    setSerceh,
+  } = useContext(StakingApp);
+  const playerRef = useRef(null);
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [page, setPage] = useState(1);
 
   function setDeviceId() {
     const deviceId = localStorage.getItem("device_id") || generateDeviceId();
@@ -34,7 +47,8 @@ export default function Test() {
   const getBlog = () => {
     setIsLoading(true);
     AxiosConfigadmin.get(
-      End_Urls.userget_blog + `?devi=${device_id}&status=${page}`
+      End_Urls.userget_blog +
+        `?devi=${device_id}&status=${page}&todate=${todate}&fromdate=${fromdate}`
     )
       .then((res) => {
         setData(res.data.data);
@@ -48,7 +62,7 @@ export default function Test() {
 
   useEffect(() => {
     getBlog();
-  }, [selectedDate, page]);
+  }, [selectedDate, page, todate && fromdate]);
 
   const formatDate = (datetime) => {
     const date = new Date(datetime);
@@ -119,57 +133,88 @@ export default function Test() {
               </div>
               <div className="text-red-700 text-md">Music Academy</div>
             </div>
+            <div className="lg:block hidden">
+              {page === 2 && (
+                <div>
+                  <p className="font-bold text-red-700 my-1">
+                    Subscribe to get reminder on your mail
+                  </p>
+                  <div className="flex flex-col gap-2 items-center  ">
+                    <input
+                      type="email"
+                      placeholder="Enter Email"
+                      className="outline-none border rounded-md py-2 pl-2 w-full "
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                    <button
+                      onClick={() => subscribe()}
+                      className="bg-red-700 py-2 w-full  rounded-md text-white px-2 cursor-pointer"
+                    >
+                      Subscribe
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="flex flex-col col-span-1 md:col-span-6">
+        <div className="flex flex-col col-span-1 md:col-span-6 lg:mt-3">
           <div className="flex w-full items-center border  ">
-            <div className="w-1/2 flex items-center justify-center border-r py-3 ">
-              <p
-                onClick={() => setPage(1)}
-                className={`font-bold cursor-pointer ${
-                  page === 1 && "underline"
-                }`}
-              >
-                Feeds
-              </p>
+            <div
+              onClick={() => setPage(1)}
+              className={`w-1/2 flex items-center cursor-pointer  justify-center border-r py-3 ${
+                page === 1 && "bg-red-700 text-white"
+              } `}
+            >
+              <p className={`font-bold  `}>Feeds</p>
               {/* {page && "✨"} */}
             </div>
-            <div className="w-1/2 flex items-center justify-center border-l py-3">
-              <p
-                onClick={() => setPage(2)}
-                className={`font-bold cursor-pointer ${
-                  page === 2 && "underline"
-                }`}
-              >
-                Events
-              </p>
+            <div
+              onClick={() => setPage(2)}
+              className={`w-1/2 flex items-center cursor-pointer justify-center border-l py-3  ${
+                page === 2 && "bg-red-700 text-white"
+              }`}
+            >
+              <p className={`font-bold `}>Events</p>
               {/* {!page && "✨"} */}
             </div>
           </div>
+
+          <Search />
           <div className="col-span-1 md:col-span-6 border">
             {data
-              ?.filter((item) => item.created_date.includes(selectedDate))
+              ?.filter((item) => item.title.includes(serch))
               .map((item) => (
                 <div key={item.id} className="cursor-pointer ">
                   <div className="flex flex-col ">
                     <div className="relative my-1">
-                      {item.image_url.split(".")[3] === "mp4" ? (
-                        <video
-                          className="w-full h-48 md:h-96 object-cover"
-                          autoPlay
-                          muted
-                          loop
-                          playsInline
-                        >
-                          <source src={item.image_url} type="video/mp4" />
-                        </video>
-                      ) : (
+                      {item.file_type === "1" && (
                         <img
                           src={item.image_url}
                           alt="Blog Image"
                           className="w-full h-48 md:h-64 object-cover"
+                        />
+                      )}
+                      {item.file_type === "2" && (
+                        <ReactPlayer
+                          ref={playerRef}
+                          url={item.image_url}
+                          controls
+                          width="100%"
+                          height="400px"
+                        />
+                      )}
+                      {item.file_type === "3" && (
+                        <ReactPlayer
+                          ref={playerRef}
+                          url={item.image_url}
+                          controls
+                          width="100%"
+                          height="400px"
                         />
                       )}
                     </div>
@@ -274,6 +319,8 @@ export default function Test() {
                 type="text"
                 className="outline-none w-full py-2 px-3 rounded-md"
                 placeholder="Search"
+                value={serch}
+                onChange={(e) => setSerceh(e.target.value)}
               />
             </div>
             <div className="flex justify-end mt-3 gap-3">
