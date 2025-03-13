@@ -14,6 +14,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import axios from "axios";
 import Search from "../Search";
 import ReactPlayer from "react-player";
+import PastPage from "../PastPage";
 
 export default function Test() {
   const navigate = useNavigate();
@@ -165,6 +166,15 @@ export default function Test() {
         <div className="flex flex-col col-span-1 md:col-span-6 lg:mt-3">
           <div className="flex w-full items-center border  ">
             <div
+              onClick={() => setPage(3)}
+              className={`w-1/2 flex items-center cursor-pointer justify-center border-l py-3  ${
+                page === 3 && "bg-red-700 text-white"
+              }`}
+            >
+              <p className={`font-bold `}>Home</p>
+              {/* {!page && "✨"} */}
+            </div>
+            <div
               onClick={() => setPage(1)}
               className={`w-1/2 flex items-center cursor-pointer  justify-center border-r py-3 ${
                 page === 1 && "bg-red-700 text-white"
@@ -182,131 +192,146 @@ export default function Test() {
               <p className={`font-bold `}>Events</p>
               {/* {!page && "✨"} */}
             </div>
+            <div
+              onClick={() => setPage(4)}
+              className={`w-1/2 flex items-center cursor-pointer justify-center border-l py-3  ${
+                page === 4 && "bg-red-700 text-white"
+              }`}
+            >
+              <p className={`font-bold `}>Past Event</p>
+              {/* {!page && "✨"} */}
+            </div>
           </div>
 
           <Search />
           <div className="col-span-1 md:col-span-6 border">
-            {data
-              ?.filter((item) => item.title.includes(serch))
-              .map((item) => (
-                <div key={item.id} className="cursor-pointer ">
-                  <div className="flex flex-col ">
-                    <div className="relative my-1">
-                      {item.file_type === "1" && (
-                        <img
-                          src={item.image_url}
-                          alt="Blog Image"
-                          className="w-full h-48 md:h-64 object-cover"
-                        />
-                      )}
-                      {item.file_type === "2" && (
-                        <ReactPlayer
-                          ref={playerRef}
-                          url={item.image_url}
-                          controls
-                          width="100%"
-                          height="400px"
-                        />
-                      )}
-                      {item.file_type === "3" && (
-                        <ReactPlayer
-                          ref={playerRef}
-                          url={item.image_url}
-                          controls
-                          width="100%"
-                          height="400px"
-                        />
-                      )}
-                    </div>
-                    <div className="py-4">
-                      <div className="px-4">
-                        <p className="text-red-700 text-lg font-semibold">
-                          {item.title}
-                        </p>
-                        <div className="flex gap-2 my-3 items-center text-sm text-gray-500">
-                          <img
-                            src="https://cdn-icons-png.flaticon.com/512/2815/2815428.png"
-                            alt="Admin Icon"
-                            className="h-5 w-5 rounded-full"
-                          />
-                          <span className="font-medium text-red-700">
-                            {item.admin_name}
-                          </span>
-                          <span className="text-gray-400 font-semibold">
-                            · {formatDate(item.created_date)}
-                            {formatTime(item.created_date)}
-                          </span>
-                        </div>
-                        <div className="flex gap-2">
-                          {item.tags.map((tag, ind) => {
-                            return (
-                              <p
-                                className={`${
-                                  ind + 1 === 1
-                                    ? "bg-green-200"
-                                    : ind + 1 === 2
-                                    ? "bg-red-200"
-                                    : ind + 1 === 3
-                                    ? "bg-yellow-200"
-                                    : ind + 1 === 4
-                                    ? "bg-blue-200"
-                                    : ind + 1 === 5
-                                    ? "bg-purple-200"
-                                    : "bg-amber-200"
-                                } rounded-full px-2 shadow-md my-3`}
-                              >
-                                {tag.tag_name}
-                              </p>
-                            );
-                          })}
-                        </div>
-                        <p
-                          dangerouslySetInnerHTML={{ __html: item.description }}
-                          className="text-gray-600 text-base mb-4 line-clamp-3"
-                        ></p>
-                      </div>
-
-                      <div className="flex justify-between items-center mt-3 border-b-2 py-3 px-4">
-                        <span className="flex gap-1">
-                          {item.like_status === 0 ? (
-                            <p
-                              onClick={() => handleLike(item.id)}
-                              className="text-black   hover:bg-red-100 hover:rounded-3xl px-5 py-1"
-                            >
-                              <FavoriteBorderIcon /> {item.total_likes}
-                            </p>
-                          ) : (
-                            <p
-                              onClick={() =>
-                                unhandleLike(item.id, item.like_id)
-                              }
-                              className="text-red-700  hover:text-red-700 hover:bg-red-100 hover:rounded-3xl px-5 py-1"
-                            >
-                              <FavoriteIcon /> {item.total_likes}
-                            </p>
+            <>
+              {(page === 2 || 1) &&
+                data
+                  ?.filter((item) => item.title.includes(serch))
+                  .map((item) => (
+                    <div key={item.id} className="cursor-pointer ">
+                      <div className="flex flex-col ">
+                        <div className="relative my-1">
+                          {item.file_type === "1" && (
+                            <img
+                              src={item.image_url}
+                              alt="Blog Image"
+                              className="w-full h-48 md:h-64 object-cover"
+                            />
                           )}
-                          <p
-                            onClick={() => navigate(`/details/${item.id}`)}
-                            className="text-black  hover:text-red-700 hover:bg-red-100 hover:rounded-3xl px-5 py-1"
-                          >
-                            <ChatBubbleOutlineIcon /> {item.total_comments}
-                          </p>
-                        </span>
+                          {item.file_type === "2" && (
+                            <ReactPlayer
+                              ref={playerRef}
+                              url={item.image_url}
+                              controls
+                              width="100%"
+                              height="400px"
+                            />
+                          )}
+                          {item.file_type === "3" && (
+                            <ReactPlayer
+                              ref={playerRef}
+                              url={item.image_url}
+                              controls
+                              width="100%"
+                              height="400px"
+                            />
+                          )}
+                        </div>
+                        <div className="py-4">
+                          <div className="px-4">
+                            <p className="text-red-700 text-lg font-semibold">
+                              {item.title}
+                            </p>
+                            <div className="flex gap-2 my-3 items-center text-sm text-gray-500">
+                              <img
+                                src="https://cdn-icons-png.flaticon.com/512/2815/2815428.png"
+                                alt="Admin Icon"
+                                className="h-5 w-5 rounded-full"
+                              />
+                              <span className="font-medium text-red-700">
+                                {item.admin_name}
+                              </span>
+                              <span className="text-gray-400 font-semibold">
+                                · {formatDate(item.created_date)}
+                                {formatTime(item.created_date)}
+                              </span>
+                            </div>
+                            <div className="flex gap-2">
+                              {item.tags.map((tag, ind) => {
+                                return (
+                                  <p
+                                    className={`${
+                                      ind + 1 === 1
+                                        ? "bg-green-200"
+                                        : ind + 1 === 2
+                                        ? "bg-red-200"
+                                        : ind + 1 === 3
+                                        ? "bg-yellow-200"
+                                        : ind + 1 === 4
+                                        ? "bg-blue-200"
+                                        : ind + 1 === 5
+                                        ? "bg-purple-200"
+                                        : "bg-amber-200"
+                                    } rounded-full px-2 shadow-md my-3`}
+                                  >
+                                    {tag.tag_name}
+                                  </p>
+                                );
+                              })}
+                            </div>
+                            <p
+                              dangerouslySetInnerHTML={{
+                                __html: item.description,
+                              }}
+                              className="text-gray-600 text-base mb-4 line-clamp-3"
+                            ></p>
+                          </div>
 
-                        <p
-                          onClick={() => navigate(`/details/${item.id}`)}
-                          className="text-black  hover:text-red-700 hover:bg-red-100 hover:rounded-3xl px-5 py-1"
-                        >
-                          <ReadMoreIcon />
-                        </p>
-                        {/* <p className="text-red-700 font-medium hover:underline">
+                          <div className="flex justify-between items-center mt-3 border-b-2 py-3 px-4">
+                            <span className="flex gap-1">
+                              {item.like_status === 0 ? (
+                                <p
+                                  onClick={() => handleLike(item.id)}
+                                  className="text-black   hover:bg-red-100 hover:rounded-3xl px-5 py-1"
+                                >
+                                  <FavoriteBorderIcon /> {item.total_likes}
+                                </p>
+                              ) : (
+                                <p
+                                  onClick={() =>
+                                    unhandleLike(item.id, item.like_id)
+                                  }
+                                  className="text-red-700  hover:text-red-700 hover:bg-red-100 hover:rounded-3xl px-5 py-1"
+                                >
+                                  <FavoriteIcon /> {item.total_likes}
+                                </p>
+                              )}
+                              <p
+                                onClick={() => navigate(`/details/${item.id}`)}
+                                className="text-black  hover:text-red-700 hover:bg-red-100 hover:rounded-3xl px-5 py-1"
+                              >
+                                <ChatBubbleOutlineIcon /> {item.total_comments}
+                              </p>
+                            </span>
+
+                            <p
+                              onClick={() => navigate(`/details/${item.id}`)}
+                              className="text-black  hover:text-red-700 hover:bg-red-100 hover:rounded-3xl px-5 py-1"
+                            >
+                              <ReadMoreIcon />
+                            </p>
+                            {/* <p className="text-red-700 font-medium hover:underline">
                           Read More
                         </p> */}
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              ))}
+                  ))}
+              {page === 4 && <PastPage />}
+            </>
           </div>
         </div>
 
