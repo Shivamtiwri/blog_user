@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import Header from "../Header";
+import React, { useEffect, useRef, useState } from "react";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import MarkChatUnreadOutlinedIcon from "@mui/icons-material/MarkChatUnreadOutlined";
 import { useParams } from "react-router-dom";
@@ -8,6 +7,9 @@ import { End_Urls } from "../../Config/End_Urls";
 import axios from "axios";
 import SendIcon from "@mui/icons-material/Send";
 import Loader from "../../Config/Loder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import Header1 from "../Header copy";
+import ReactPlayer from "react-player";
 
 export default function BlogDeatials() {
   const [like, setLike] = useState(false);
@@ -18,6 +20,7 @@ export default function BlogDeatials() {
   const [comment, setComment] = useState("");
   const [commentdata, setCommentData] = useState();
   const user_id = localStorage.getItem("user_id");
+  const playerRef = useRef(null);
   const date = (datetime) => {
     const date = new Date(datetime);
 
@@ -41,11 +44,23 @@ export default function BlogDeatials() {
     return formattedTime;
   };
 
+  function setDeviceId() {
+    const deviceId = localStorage.getItem("device_id") || generateDeviceId();
+    localStorage.setItem("device_id", deviceId);
+    return deviceId;
+  }
+
+  function generateDeviceId() {
+    return "device_" + Math.random().toString(36).substr(2, 9); // Generates a random ID
+  }
+
+  const device_id = setDeviceId();
+
   // Fetch blog data
   const adminlogin = async () => {
     try {
       const res = await AxiosConfigadmin.get(
-        End_Urls.getsingaleblog + `?id=${id}`
+        End_Urls.getsingaleblog + `?id=${id}&devi=${device_id}`
       );
       setData(res.data.data);
     } catch (err) {
@@ -60,16 +75,31 @@ export default function BlogDeatials() {
         {
           blog_id: id,
           like_status: cset ? 0 : 1, // Toggle like/unlike
+          device_id: device_id,
         }
       );
 
-      console.log(response.data);
-      alert(cset ? "Blog unliked!" : "Blog liked!");
       adminlogin();
       // setLikeStatus(!cset);
     } catch (error) {
       console.error("Error:", error.response?.data || error.message);
-      alert("Failed to like blog!");
+    }
+  };
+
+  const unhandleLike = async (likr_id) => {
+    try {
+      const response = await axios.post(
+        "https://api.saarkansas.org/user/un_likeBlog",
+        {
+          blog_id: id,
+          like_id: likr_id, // Toggle like/unlike
+        }
+      );
+
+      adminlogin();
+      // setLikeStatus(!cset);
+    } catch (error) {
+      console.error("Error:", error.response?.data || error.message);
     }
   };
 
@@ -116,86 +146,126 @@ export default function BlogDeatials() {
   const toggleLike = () => setLike((prev) => !prev);
   const toggleCommentSection = () => setCset((prev) => !prev);
 
-  if (!data) return <Loader/>;
+  if (!data) return <Loader />;
 
   const {
     title,
+    like_id,
     image_url,
     description,
     admin_name,
     created_date,
     total_likes,
     total_comments,
+    tags,
+    like_status,
+    file_type,
   } = data;
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <Header />
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow-md mb-4 overflow-hidden">
-          {image_url.split(".")[3] === "mp4" ? (
-            <video
-              className="w-full lg:h-96 h-64 object-cover rounded-t-xl"
-              autoPlay
-              muted
-              loop
-              playsInline
-            >
-              <source src={image_url} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          ) : (
+    <div className="min-h-screen bg-gray-100 ">
+      <Header1 />
+      <div className="max-w-7xl mx-auto lg:px-0 px-1  lg:bg-white rounded-t-xl mt-2 lg:mt-8">
+        <div className=" overflow-hidden ">
+          {file_type === "1" && (
             <img
               src={image_url}
               alt="Image"
               className="w-full lg:h-96 h-64 object-cover rounded-t-xl"
+              
             />
           )}
-          {/* <img
-            src={image_url}
-            alt="Post"
-            className="w-full h-[50%] object-cover"
-          /> */}
-          <div className="p-6">
+          {file_type === "2" && (
+            <ReactPlayer
+              ref={playerRef}
+              url={image_url}
+              controls
+              width="100%"
+            />
+          )}
+          {file_type === "3" && (
+            <ReactPlayer
+              ref={playerRef}
+              url={image_url}
+              controls
+              width="100%"
+            />
+          )}
+
+          <div className="p-6 bg-white">
             <h2 className="text-2xl text-red-700  font-semibold mb-2">
               {title}
             </h2>
-            <p className="text-sm text-gray-500 mb-4">
+            <p className="text-sm text-red-700 mb-4">
               By {admin_name} |{" "}
               {`${date(created_date)} time: ${time(created_date)}`}
             </p>
+            <div className="flex gap-2">
+              {tags.map((tag, ind) => {
+                return (
+                  <p
+                    className={`${
+                      ind + 1 === 1
+                        ? "bg-green-200"
+                        : ind + 1 === 2
+                        ? "bg-red-200"
+                        : ind + 1 === 3
+                        ? "bg-yellow-200"
+                        : ind + 1 === 4
+                        ? "bg-blue-200"
+                        : ind + 1 === 5
+                        ? "bg-purple-200"
+                        : "bg-amber-200"
+                    } rounded-full px-2 shadow-md my-3`}
+                  >
+                    {tag.tag_name}
+                  </p>
+                );
+              })}
+            </div>
             <p
               dangerouslySetInnerHTML={{ __html: description }}
-              className="text-gray-700 mb-4"
+              className="text-gray-700 mb-1"
             ></p>
-
-            <div className="flex justify-between items-center text-gray-500">
-              <div className="flex items-center gap-2">
-                <FavoriteBorderIcon
-                  onClick={() => {
-                    toggleLike();
-                    handleLike();
-                  }}
-                  className={`${
-                    like ? "text-red-500 cursor-pointer" : "cursor-pointer"
-                  }`}
-                />
+          </div>
+        </div>
+        <div className="flex justify-between items-center text-gray-500 border-t-2 bg-white">
+          <div className="flex items-center gap-2">
+            {like_status === 0 ? (
+              <p
+                onClick={() => {
+                  toggleLike();
+                  handleLike();
+                }}
+                className="text-black   hover:bg-red-100 hover:rounded-3xl px-5 py-1"
+              >
+                <FavoriteBorderIcon />
                 {total_likes}
-                <MarkChatUnreadOutlinedIcon
-                  onClick={toggleCommentSection}
-                  className="cursor-pointer"
-                />
-                {total_comments}
-              </div>
-            </div>
+              </p>
+            ) : (
+              <p
+                onClick={() => unhandleLike(like_id)}
+                className="text-red-700  hover:text-red-700 hover:bg-red-100 hover:rounded-3xl px-5 py-1"
+              >
+                <FavoriteIcon /> {total_likes}
+              </p>
+            )}
+
+            <MarkChatUnreadOutlinedIcon
+              onClick={toggleCommentSection}
+              className="cursor-pointer"
+            />
+            {total_comments}
           </div>
         </div>
 
         {cset && (
-          <div>
-            <h4 className="text-lg text-red-500 font-semibold mb-2">Comment</h4>
-            <div className="px-6 flex flex-col py-4 bg-white shadow-md rounded-lg">
-              <div className="flex flex-col h-52 overflow-auto px-10">
+          <div className="text-sm mt-2 ">
+            <div className="lg:px-6 px-2 flex flex-col py-4 bg-white shadow-md rounded-lg">
+              <h4 className="text-lg text-red-700 font-semibold mb-2 lg:pl-5">
+                Comment
+              </h4>
+              <div className="flex flex-col max-h-52 overflow-auto lg:px-10 px-5">
                 {commentdata?.map((item) => {
                   return (
                     <span
@@ -221,26 +291,26 @@ export default function BlogDeatials() {
 
               <form onSubmit={handleCommentSubmit}>
                 <div className="flex flex-col gap-1 rounded-lg p-4">
-                  {!user_id && (
-                    <input
-                      type="text"
-                      placeholder="Enter User Name"
-                      value={user}
-                      onChange={(e) => setuser(e.target.value)}
-                      className="outline-none border bg-gray-100 w-44 pl-3 ml-2 py-1 rounded-md"
-                    />
-                  )}
+                  <input
+                    type="text"
+                    placeholder="Enter @Username"
+                    value={user_id ? user_id : user}
+                    onChange={(e) => setuser(e.target.value)}
+                    className="outline-none border bg-gray-100 w-44 pl-1 py-1 rounded-md"
+                    disabled={user_id}
+                    minLength={4}
+                  />
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center rounded-md border-2 my-1 gap-2">
                     <textarea
                       placeholder="Enter Comment"
-                      className="py-2 rounded-md border w-full pl-5"
+                      className="py-2 outline-none  w-full pl-5"
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}
                     />
                     <button
                       type="submit"
-                      className="bg-gray-100 border py-1 text-center px-5 rounded-md text-white"
+                      className=" mt-5 text-center px-5 rounded-md text-white"
                     >
                       <SendIcon className="!text-red-700" />
                     </button>

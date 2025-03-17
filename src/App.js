@@ -8,10 +8,11 @@ import { Staking } from "./Hook";
 import AboutUs from "./Page/aboutUs";
 import Privacy from "./Page/Privacy";
 import Terms from "./Page/Terms";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
-    <div className="bg-gray-100">
+    <div className="bg-gray-100 py-1">
       <BrowserRouter>
         <Staking>
           <Routes>
@@ -22,6 +23,7 @@ function App() {
             <Route path="/details/:id" element={<BlogDeatials />} />
             <Route path="/" element={<Test />} />
           </Routes>
+          <ToastContainer />
         </Staking>
       </BrowserRouter>
     </div>

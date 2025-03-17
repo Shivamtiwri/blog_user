@@ -5,10 +5,11 @@ import AnchorTemporaryDrawer from "../AnchorTemporaryDrawer";
 import { Button, Menu, MenuItem } from "@mui/material";
 import { StakingApp } from "../../Hook";
 import FilterListIcon from "@mui/icons-material/FilterList";
+import SearchIcon from "@mui/icons-material/Search";
 
-export default function Header() {
+export default function Header1() {
   const navigate = useNavigate();
-  const { todate,setTodate,fromdate,setFromdate } = useContext(StakingApp);
+  const { selectedDate, setSelecteddate } = useContext(StakingApp);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -16,14 +17,9 @@ export default function Header() {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleYearTo = (event) => {
-    setTodate(event.target.value);
+  const handleYearChange = (event) => {
+    setSelecteddate(event.target.value);
   };
-
-  const handleYearFrom = (event) => {
-    setFromdate(event.target.value);
-  };
-
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -55,7 +51,7 @@ export default function Header() {
               aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
               onClick={handleClick}
-              className=" !text-red-700"
+              className=" !text-red-500"
             />
 
             <Menu
@@ -67,31 +63,17 @@ export default function Header() {
                 "aria-labelledby": "basic-button",
               }}
             >
-              <div className="px-2 w-48 broder-b my-1">
-                <p>To date</p>
+              <MenuItem>
                 <input
                   type="date"
-                  value={todate}
-                  onChange={handleYearTo}
+                  value={selectedDate}
+                  onChange={handleYearChange}
                   placeholder="Enter Year"
                   min="1900"
                   max="2100"
                   className="border p-2 rounded-md w-full"
                 />
-              </div>
-
-              <div className="px-2 w-48 border-t my-1">
-                <p>From date</p>
-                <input
-                  type="date"
-                  value={fromdate}
-                  onChange={handleYearFrom}
-                  placeholder="Enter Year"
-                  min="1900"
-                  max="2100"
-                  className="border p-2 rounded-md w-full"
-                />
-              </div>
+              </MenuItem>
             </Menu>
           </div>
         </div>
