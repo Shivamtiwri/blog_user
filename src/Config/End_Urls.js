@@ -6,4 +6,5 @@ export const End_Urls = {
   adminaddblog: "/admin/add-blog",
   comment: "/user/add_comment",
   getcomment: "/user/get_comment",
+  get_past_event: "user/get-past-event",
 };

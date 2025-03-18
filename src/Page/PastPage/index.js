@@ -15,15 +15,11 @@ export default function StyledAccordion() {
   const { serch } = React.useContext(StakingApp);
   const navigate = useNavigate();
   const playerRef = React.useRef(null);
-  const [selectedMonth, setSelectedMonth] = React.useState(
-    new Date().getMonth() + 1
-  );
+  const [selectedMonth, setSelectedMonth] = React.useState("");
   const [selectedDate, setSelectedDate] = React.useState(null);
   const [data, setData] = React.useState();
   const [isLoading, setIsLoading] = React.useState();
-  const [selectedYear, setSelectedYear] = React.useState(
-    new Date().getFullYear()
-  );
+  const [selectedYear, setSelectedYear] = React.useState("");
   function setDeviceId() {
     const deviceId = localStorage.getItem("device_id") || generateDeviceId();
     localStorage.setItem("device_id", deviceId);
@@ -43,9 +39,14 @@ export default function StyledAccordion() {
   const device_id = setDeviceId();
   const getBlog = () => {
     setIsLoading(true);
-    AxiosConfigadmin.get(
-      End_Urls.userget_blog + `?devi=${device_id}&status=${2}&todate=&fromdate=`
-    )
+
+    // Proper null check for selectedDate
+    const parms =
+      selectedDate !== null
+        ? `?blogType=2&date=${selectedYear}-${selectedMonth}-${selectedDate}`
+        : `?blogType=2&month=${selectedMonth}&year=${selectedYear}`;
+
+    AxiosConfigadmin.get(End_Urls.get_past_event + parms)
       .then((res) => {
         setData(res.data.data);
         setIsLoading(false);
@@ -58,7 +59,7 @@ export default function StyledAccordion() {
 
   React.useEffect(() => {
     getBlog();
-  }, [selectedYear && selectedMonth && selectedDate]);
+  }, [selectedYear, selectedMonth, selectedDate]);
 
   const yearScrollRef = React.useRef(null);
   const monthScrollRef = React.useRef(null);
@@ -220,126 +221,134 @@ export default function StyledAccordion() {
           className="cursor-pointer"
         />
       </div>
-      <div>
-        {data
-          ?.filter((item) => item.title.includes(serch))
-          .map((item) => (
-            <div key={item.id} className="cursor-pointer ">
-              <div className="flex flex-col ">
-                <div className="relative my-1">
-                  {item.file_type === "1" && (
-                    <img
-                      src={item.image_url}
-                      alt="Blog Image"
-                      className="w-full h-48 md:h-64 object-cover"
-                    />
-                  )}
-                  {item.file_type === "2" && (
-                    <ReactPlayer
-                      ref={playerRef}
-                      url={item.image_url}
-                      controls
-                      width="100%"
-                      height="400px"
-                    />
-                  )}
-                  {item.file_type === "3" && (
-                    <ReactPlayer
-                      ref={playerRef}
-                      url={item.image_url}
-                      controls
-                      width="100%"
-                      height="400px"
-                    />
-                  )}
-                </div>
-                <div className="py-4">
-                  <div className="px-4">
-                    <p className="text-red-700 text-lg font-semibold">
-                      {item.title}
-                    </p>
-                    <div className="flex gap-2 my-3 items-center text-sm text-gray-500">
+      {data?.length === 0 ? (
+        <div className="flex items-center justify-center font-bold">
+          <p className="text-black font-xl my-5">
+            No data found for the given filters
+          </p>
+        </div>
+      ) : (
+        <div>
+          {data
+            ?.filter((item) => item.title.includes(serch))
+            .map((item) => (
+              <div key={item.id} className="cursor-pointer ">
+                <div className="flex flex-col ">
+                  <div className="relative my-1">
+                    {item.file_type === "1" && (
                       <img
-                        src="https://cdn-icons-png.flaticon.com/512/2815/2815428.png"
-                        alt="Admin Icon"
-                        className="h-5 w-5 rounded-full"
+                        src={item.image_url}
+                        alt="Blog Image"
+                        className="w-full h-48 md:h-64 object-cover"
                       />
-                      <span className="font-medium text-red-700">
-                        {item.admin_name}
-                      </span>
-                      <span className="text-gray-400 font-semibold">
-                        · {formatDate(item.created_date)}
-                        {formatTime(item.created_date)}
-                      </span>
-                    </div>
-                    <div className="flex gap-2">
-                      {item.tags.map((tag, ind) => {
-                        return (
-                          <p
-                            className={`${
-                              ind + 1 === 1
-                                ? "bg-green-200"
-                                : ind + 1 === 2
-                                ? "bg-red-200"
-                                : ind + 1 === 3
-                                ? "bg-yellow-200"
-                                : ind + 1 === 4
-                                ? "bg-blue-200"
-                                : ind + 1 === 5
-                                ? "bg-purple-200"
-                                : "bg-amber-200"
-                            } rounded-full px-2 shadow-md my-3`}
-                          >
-                            {tag.tag_name}
-                          </p>
-                        );
-                      })}
-                    </div>
-                    <p
-                      dangerouslySetInnerHTML={{
-                        __html: item.description,
-                      }}
-                      className="text-gray-600 text-base mb-4 line-clamp-3"
-                    ></p>
+                    )}
+                    {item.file_type === "2" && (
+                      <ReactPlayer
+                        ref={playerRef}
+                        url={item.image_url}
+                        controls
+                        width="100%"
+                        height="400px"
+                      />
+                    )}
+                    {item.file_type === "3" && (
+                      <ReactPlayer
+                        ref={playerRef}
+                        url={item.image_url}
+                        controls
+                        width="100%"
+                        height="400px"
+                      />
+                    )}
                   </div>
+                  <div className="py-4">
+                    <div className="px-4">
+                      <p className="text-red-700 text-lg font-semibold">
+                        {item.title}
+                      </p>
+                      <div className="flex gap-2 my-3 items-center text-sm text-gray-500">
+                        <img
+                          src="https://cdn-icons-png.flaticon.com/512/2815/2815428.png"
+                          alt="Admin Icon"
+                          className="h-5 w-5 rounded-full"
+                        />
+                        <span className="font-medium text-red-700">
+                          {item.admin_name}
+                        </span>
+                        <span className="text-gray-400 font-semibold">
+                          · {formatDate(item.created_date)}
+                          {formatTime(item.created_date)}
+                        </span>
+                      </div>
+                      <div className="flex gap-2">
+                        {item?.tags?.map((tag, ind) => {
+                          return (
+                            <p
+                              className={`${
+                                ind + 1 === 1
+                                  ? "bg-green-200"
+                                  : ind + 1 === 2
+                                  ? "bg-red-200"
+                                  : ind + 1 === 3
+                                  ? "bg-yellow-200"
+                                  : ind + 1 === 4
+                                  ? "bg-blue-200"
+                                  : ind + 1 === 5
+                                  ? "bg-purple-200"
+                                  : "bg-amber-200"
+                              } rounded-full px-2 shadow-md my-3`}
+                            >
+                              {tag.tag_name}
+                            </p>
+                          );
+                        })}
+                      </div>
+                      <p
+                        dangerouslySetInnerHTML={{
+                          __html: item.description,
+                        }}
+                        className="text-gray-600 text-base mb-4 line-clamp-3"
+                      ></p>
+                    </div>
 
-                  <div className="flex justify-between items-center mt-3 border-b-2 py-3 px-4">
-                    <span className="flex gap-1">
-                      {item.like_status === 0 ? (
+                    <div className="flex justify-between items-center mt-3 border-b-2 py-3 px-4">
+                      <span className="flex gap-1">
+                        {item.like_status === 0 ? (
+                          <p
+                            onClick={() => handleLike(item.id)}
+                            className="text-black   hover:bg-red-100 hover:rounded-3xl px-5 py-1"
+                          >
+                            <FavoriteBorderIcon /> {item.total_likes}
+                          </p>
+                        ) : (
+                          <p
+                            onClick={() => unhandleLike(item.id, item.like_id)}
+                            className="text-red-700  hover:text-red-700 hover:bg-red-100 hover:rounded-3xl px-5 py-1"
+                          >
+                            <FavoriteIcon /> {item.total_likes}
+                          </p>
+                        )}
                         <p
-                          onClick={() => handleLike(item.id)}
-                          className="text-black   hover:bg-red-100 hover:rounded-3xl px-5 py-1"
+                          onClick={() => navigate(`/details/${item.id}`)}
+                          className="text-black  hover:text-red-700 hover:bg-red-100 hover:rounded-3xl px-5 py-1"
                         >
-                          <FavoriteBorderIcon /> {item.total_likes}
+                          <ChatBubbleOutlineIcon /> {item.total_comments}
                         </p>
-                      ) : (
-                        <p
-                          onClick={() => unhandleLike(item.id, item.like_id)}
-                          className="text-red-700  hover:text-red-700 hover:bg-red-100 hover:rounded-3xl px-5 py-1"
-                        >
-                          <FavoriteIcon /> {item.total_likes}
-                        </p>
-                      )}
+                      </span>
+
                       <p
                         onClick={() => navigate(`/details/${item.id}`)}
                         className="text-black  hover:text-red-700 hover:bg-red-100 hover:rounded-3xl px-5 py-1"
                       >
-                        <ChatBubbleOutlineIcon /> {item.total_comments}
+                        <ReadMoreIcon />
                       </p>
-                    </span>
-
-                    <p
-                      onClick={() => navigate(`/details/${item.id}`)}
-                      className="text-black  hover:text-red-700 hover:bg-red-100 hover:rounded-3xl px-5 py-1"
-                    >
-                      <ReadMoreIcon />
-                    </p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-      </div>
+            ))}
+        </div>
+      )}
     </div>
   );
 }
