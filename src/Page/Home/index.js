@@ -2,13 +2,14 @@ import React from "react";
 import logo from "../../Assests/image.png";
 import founder1 from "../../Assests/founder1.jpeg";
 import founder2 from "../../Assests/founder2.jpeg";
+import banner from "../../Assests/banner.jpg"
 
 const Home = () => {
   return (
     <div className="min-h-screen py-2 bg-white">
       <div className="relative w-full">
         <img
-          src="https://scontent.fknu1-2.fna.fbcdn.net/v/t39.30808-6/469005751_542147531970434_8900241049583642938_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=109&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=_8D4kCUJOIcQ7kNvgGbh4Ia&_nc_oc=Adh31ScRmHFCS-Z11k32XPPtc5yOZDixMWZii90U-VcARK2zoIqKG10BjJ3Hism87dM&_nc_zt=23&_nc_ht=scontent.fknu1-2.fna&_nc_gid=rNxA7YNL80H3pYE6kDxTOQ&oh=00_AYHE9ijGBgzk1MokILFtHdvmeH8fLTqEDG6w0Skn6p51ww&oe=67DE2D52"
+          src={banner}
           alt="Banner"
           className="w-full h-full object-cover"
         />

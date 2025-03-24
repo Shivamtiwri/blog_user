@@ -1,8 +1,6 @@
 
-
-
-
 import React from "react";
+import banner from "../../Assests/banner.jpg"
 
 const DonationForm = () => {
   return (
@@ -10,7 +8,7 @@ const DonationForm = () => {
     <div className="min-h-screen bg-white py-10 px-3 flex flex-col justify-center ">
       <div className="flex flex-col items-center mb-6">
        
-         <img src="https://scontent.fknu1-2.fna.fbcdn.net/v/t39.30808-6/469005751_542147531970434_8900241049583642938_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=109&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=_8D4kCUJOIcQ7kNvgGbh4Ia&_nc_oc=Adh31ScRmHFCS-Z11k32XPPtc5yOZDixMWZii90U-VcARK2zoIqKG10BjJ3Hism87dM&_nc_zt=23&_nc_ht=scontent.fknu1-2.fna&_nc_gid=rNxA7YNL80H3pYE6kDxTOQ&oh=00_AYHE9ijGBgzk1MokILFtHdvmeH8fLTqEDG6w0Skn6p51ww&oe=67DE2D52" alt=""/>
+         <img src={banner} alt=""/>
       </div>
       
       <form className="space-y-4">
@@ -31,9 +29,10 @@ const DonationForm = () => {
         />
         
         <select className="w-full p-3 border rounded-lg">
+        <option>INR</option>
           <option>USD</option>
-          <option>EUR</option>
-          <option>GBP</option>
+         
+         
         </select>
         
         <div className="flex gap-4">

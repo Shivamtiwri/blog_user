@@ -126,6 +126,9 @@ function generateDeviceId() {
   };
 
   const unhandleLike = async (id, likr_id) => {
+
+    console.log(id, likr_id);
+    
     try {
       const response = await axios.post(
         "https://api.saarkansas.org/user/un_likeBlog",
@@ -153,7 +156,7 @@ function generateDeviceId() {
       <Header />
       <div className="max-w-7xl mx-auto  py-4 lg:py-8 grid grid-cols-1 md:grid-cols-12 gap-6">
         {/* Sidebar Left */}
-        <div className="hidden md:block md:col-span-3">
+        <div className="hidden md:block md:col-span-2">
           <div className="flex flex-col items-start sticky top-24 gap-4">
             <img
               src={logo}
@@ -195,7 +198,7 @@ function generateDeviceId() {
         </div>
 
         {/* Main Content */}
-        <div className="flex flex-col col-span-1 md:col-span-6 lg:mt-3">
+        <div className="flex flex-col col-span-1 md:col-span-7 lg:mt-3">
           <div className="flex w-full items-center border  ">
             <div
               onClick={() => setPage(3)}
@@ -230,7 +233,7 @@ function generateDeviceId() {
                 page === 4 && "bg-red-700 text-white"
               }`}
             >
-              <p className={`font-bold `}>Past Event</p>
+              <p className={`font-bold `}>Past Feed</p>
               {/* {!page && "✨"} */}
             </div>
             <div

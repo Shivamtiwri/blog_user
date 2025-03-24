@@ -43,8 +43,8 @@ export default function StyledAccordion() {
     // Proper null check for selectedDate
     const parms =
       selectedDate !== null
-        ? `?blogType=2&date=${selectedYear}-${selectedMonth}-${selectedDate}`
-        : `?blogType=2&month=${selectedMonth}&year=${selectedYear}`;
+        ? `?devi=${device_id}&blogType=1&date=${selectedYear}-${selectedMonth}-${selectedDate}`
+        : `?devi=${device_id}&blogType=1&month=${selectedMonth}&year=${selectedYear}`;
 
     AxiosConfigadmin.get(End_Urls.get_past_event + parms)
       .then((res) => {
@@ -135,7 +135,7 @@ export default function StyledAccordion() {
     }
   };
   return (
-    <div className="max-w-2xl mx-auto mt-6 px-1">
+    <div className="max-w-3xl mx-auto mt-6 px-1">
       {/* Year Selector */}
       <div className="flex bg-white shadow-md p-2 rounded-md my-1 items-center gap-1">
         <ArrowBackIosIcon
